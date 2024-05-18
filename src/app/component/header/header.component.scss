@@ -1,0 +1,20 @@
+ .nav-item.active .nav-link {
+    color: #28a745; 
+  }
+.cart-quantity {
+  left: 26px;
+    top: 14px;
+}
+.dropdown-toggle {
+  position: relative;
+}
+.dropdown-account {
+  display: none;
+  position: absolute;
+  background-color: white;
+  z-index: 1;
+}
+
+.nav-user-item:hover .dropdown-account {
+  display: block;
+}

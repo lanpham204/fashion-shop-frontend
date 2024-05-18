@@ -1,0 +1,181 @@
+<div class="container mt-5" style="min-height: 500px;">
+    <p-confirmDialog></p-confirmDialog>
+    <div class="row">
+        <div class="col-6">
+            <div class="input-group ms-3" style="width: 500px;">
+                <input type="text" class="form-control" placeholder="Tìm kiếm sản phẩm" [(ngModel)]="keyword"
+                appEnterSearchOrder>
+                <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"
+                        (click)="onClickSearchOrdersByKeyWord(keyword)"></i></span>
+            </div>
+        </div>
+        <div class="col-6">
+            <select class="form-control ms-3" (change)="onClickSearchOrderByStatus()" [(ngModel)]="status" style="width: 500px;">
+                <option selected value="">Tất cả</option>
+                <option value="UNPAID">Chưa thanh toán</option>
+                <option value="PENDING">Chờ xác nhận</option>
+                <option value="SHIPPING">Đang giao</option>
+                <option value="DELIVERED">Đã giao hàng</option>
+                <option value="CANCELLED">Đã hủy</option>
+            </select>
+        </div>
+    </div>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Mã đơn hàng</th>
+                <th>Họ và tên</th>
+                <th>Số điện thoại</th>
+                <th>Địa chỉ</th>
+                <th>Ghi chú</th>
+                <th>Ngày đặt hàng</th>
+                <th>Trạng thái</th>
+                <th>Hiệu lực</th>
+                <th>Tổng tiền</th>
+                <th>Phương thức thanh toán</th>
+                <th>Chi tiết đơn hàng</th>
+                <th>Hành động</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (item of orders; track $index) {
+            <tr>
+                <td>{{item.id}}</td>
+                <td>{{item.fullname}}</td>
+                <td>{{item.phone_number}}</td>
+                <td>{{item.address}}</td>
+                <td>{{item.note}}</td>
+                <td>{{item.order_date | date: 'dd-MM-yyyy HH:mm:ss' }}</td>
+                <td>
+                    <p class="badge text-bg-info ">{{item.status}}</p>
+                </td>
+                <td>
+                    <p class="badge text-bg-primary">{{item.active}}</p>
+                </td>
+                <td>{{item.total_money | currency:'VND':'symbol':'1.0-0'}}</td>
+                <td>{{item.payment_method}}</td>
+                <td><button class="btn btn-primary" routerLink="/admin/order-details/{{item.id}}">Xem chi tiết</button>
+                </td>
+                <td>
+                    <a>
+                        <button pButton pRipple label="Chỉnh sửa" class="p-button-warning m-1"
+                            (click)="showUpdateDialog(item.id)"></button>
+                    </a>
+                    <p-button icon="pi pi-times" label="Xóa" styleClass="p-button-danger m-1"
+                        (click)="deleteOrder($event,item.id,$index)"></p-button>
+                </td>
+            </tr>
+
+            }
+        </tbody>
+    </table>
+    <p-dialog header="Header" [(visible)]="visibleUpdate" [breakpoints]="{ '960px': '75vw' }"
+        [style]="{ width: '50vw' }" [draggable]="false" [resizable]="false">
+        <div class="modal-content p-2">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Sửa sản phẩm</h5>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="p-3">
+                        <form [formGroup]="orderForm">
+                            <div class="form-group">
+                                <label for="user_id">Mã người dùng:</label>
+                                <input type="number" class="form-control" id="user_id" value="{{order?.user_id}}"
+                                    [disabled]="true">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="fullname">Họ và tên:</label>
+                                <input type="text" class="form-control" id="fullname" formControlName="fullname">
+                                <div *ngIf="orderForm.get('fullname')?.invalid && orderForm.get('fullname')?.touched"
+                                    class="text-danger">
+                                    Họ và tên không được để trống
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="phone_number">Số điện thoại:</label>
+                                <input type="text" class="form-control" id="phone_number"
+                                    formControlName="phone_number">
+                                <div *ngIf="orderForm.get('phone_number')?.invalid && orderForm.get('phone_number')?.touched"
+                                    class="text-danger">
+                                    Số điện thoại không đúng định dạng
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="address">Địa chỉ:</label>
+                                <textarea class="form-control" id="address" formControlName="address"></textarea>
+                                <div *ngIf="orderForm.get('address')?.invalid && orderForm.get('address')?.touched"
+                                    class="text-danger">
+                                    Địa chỉ là không được để trống
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="note">Ghi chú:</label>
+                                <textarea class="form-control" id="note" formControlName="note"></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="total_money">Tổng tiền:</label>
+                                <input type="number" class="form-control" id="total_money"
+                                    value="{{order?.total_money | currency:'VND':'symbol':'1.0-0'}}" [disabled]="true">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="order_date">Ngày đặt hàng:</label>
+                                <input type="text" class="form-control" id="order_date"
+                                    value="{{order?.order_date | date: 'dd-MM-yyyy HH:mm:ss' }}" [disabled]="true">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="payment_method">Phương thức thanh toán:</label>
+                                <input type="text" class="form-control" id="payment_method"
+                                    value="{{order?.payment_method}}" [disabled]="true">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="status">Trạng thái:</label>
+                                <select class="form-control" formControlName="status">
+                                    <option selected value="UNPAID" [selected]="order?.status === 'UNPAID'">UNPAID
+                                    </option>
+                                    <option selected value="PENDING" [selected]="order?.status === 'UNPAID'">PENDING
+                                    </option>
+                                    <option selected value="SHIPPING" [selected]="order?.status === 'UNPAID'">SHIPPING
+                                    </option>
+                                    <option selected value="DELIVERED" [selected]="order?.status === 'UNPAID'">DELIVERED
+                                    </option>
+                                    <option selected value="CANCELLED" [selected]="order?.status === 'UNPAID'">CANCELLED
+                                    </option>
+                                </select>
+                                <div *ngIf="orderForm.get('status')?.invalid && orderForm.get('status')?.touched"
+                                    class="text-danger">
+                                    Trạng thái là bắt buộc
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="closeModalButton" class="btn btn-secondary me-2" data-bs-dismiss="modal"
+                    (click)="closeAddDiallog()">Trở về</button>
+                <button type="button" class="btn btn-primary" (click)="updateOrder()">Sửa</button>
+            </div>
+        </div>
+    </p-dialog>
+    <nav aria-label="Page navigation example " class=" d-flex justify-content-center">
+        <ul class="pagination ">
+            <li class="page-item" (click)="onFirstPage()"><a class="page-link">First</a></li>
+            <li class="page-item" (click)="onPreviousPage()"><a class="page-link">Previous</a></li>
+            <li class="page-item" *ngFor="let page of visiblePage" [class.active]="currentPage === page">
+                <a class="page-link" (click)="onPageChange(page)">{{ page + 1 }}</a>
+            </li>
+            <li class="page-item" (click)="onNextPage()"><a class="page-link">Next</a></li>
+            <li class="page-item" (click)="onLastPage()"><a class="page-link">Last</a></li>
+        </ul>
+    </nav>
+</div>

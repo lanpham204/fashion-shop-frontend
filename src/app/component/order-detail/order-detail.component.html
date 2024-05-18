@@ -1,0 +1,77 @@
+<app-header></app-header>
+<div class="container">
+    <div class="row">
+        <div class="col-md-4">
+            <form>
+                <div class="mb-3">
+                    <label for="orderId" class="form-label">Mã đơn hàng</label>
+                    <input type="text" class="form-control" id="orderId" value="{{order?.id}}" readonly>
+                </div>
+                <div class="mb-3">
+                    <label for="fullName" class="form-label">Họ và tên</label>
+                    <input type="text" class="form-control" id="fullName" value="{{order?.fullname}}" readonly>
+                </div>
+                <div class="mb-3">
+                    <label for="phoneNumber" class="form-label">Số điện thoại</label>
+                    <input type="text" class="form-control" id="phoneNumber" value="{{order?.phone_number}}" readonly>
+                </div>
+                <div class="mb-3">
+                    <label for="address" class="form-label">Địa chỉ</label>
+                    <input type="text" class="form-control" id="address" value="{{order?.address}}" readonly>
+                </div>
+                <div class="mb-3">
+                    <label for="note" class="form-label">Ghi chú</label>
+                    <input type="text" class="form-control" id="note" value="{{order?.note}}" readonly>
+                </div>
+                <div class="mb-3">
+                    <label for="orderDate" class="form-label">Ngày đặt hàng</label>
+                    <input type="text" class="form-control" id="orderDate" value="{{order?.order_date | date: 'dd-MM-yyyy HH:mm:ss'}}" readonly>
+                </div>
+                <div class="mb-3">
+                    <label for="status" class="form-label">Trạng thái</label>
+                    <input type="text" class="form-control" id="status" value="{{order?.status}}" readonly>
+                </div>
+                <div class="mb-3">
+                    <label for="paymentMethod" class="form-label">Phương thức thanh toán</label>
+                    <input type="text" class="form-control" id="paymentMethod" value="{{order?.payment_method}}" readonly>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-8 mt-5">
+            <table class="table table-hover table-bordered">
+                <thead>
+                    <tr>
+                        <th>Tên sản phẩm</th>
+                        <th>Hình ảnh</th>
+                        <th>Giá</th>
+                        <th>Size</th>
+                        <th>Color</th>
+                        <th>Số lượng</th>
+                        <th>Tổng tiền</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (item of order?.order_details; track $index) {
+                    <tr>
+                        <td>{{item.product.name}}</td>
+                        <td><img src="{{item.product.thumbnail}}" alt="Sản phẩm" style="max-width: 100px;"> </td>
+                        <td>{{item.product.price | currency:'VND':'symbol':'1.0-0'}}</td>
+                        <td>{{item.size}}</td>
+                        <td>{{item.color}}</td>
+                        <td>{{item.quantity}}</td>
+                        <td>{{item.product.price * item.quantity | currency:'VND':'symbol':'1.0-0'}}</td>
+                    </tr>
+                    }
+                    <tr>
+                            <h3 class="" style="color: red;">Tổng cộng:  {{order?.total_money| currency:'VND':'symbol':'1.0-0'}} </h3>
+                    </tr>
+                </tbody>
+            
+            </table>
+            <button class="btn btn-secondary d-flex justify-content-end" style="font-size: 25px;" routerLink="/my-orders">Trở về</button>
+        </div>
+    </div>
+</div>
+
+
+<app-footer></app-footer>

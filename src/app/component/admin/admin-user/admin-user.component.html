@@ -1,0 +1,101 @@
+<p-confirmDialog></p-confirmDialog>
+<p-dialog header="" [(visible)]="visibleAdd" [breakpoints]="{ '960px': '75vw' }" [style]="{ width: '50vw' }"
+    [draggable]="false" [resizable]="false">
+    <div class="modal-content p-2">
+        <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Thêm user</h5>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="p-3">
+                    <form [formGroup]="userForm">
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" formControlName="email">
+                            <div *ngIf="userForm.get('email')?.invalid && userForm.get('email')?.touched"
+                                class="text-danger">
+                                Vui lòng nhập một địa chỉ email hợp lệ.
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Mật khẩu</label>
+                            <input type="password" class="form-control" id="password" formControlName="password">
+                            <div *ngIf="userForm.get('password')?.invalid && userForm.get('password')?.touched"
+                                class="text-danger">
+                                Mật khẩu phải có ít nhất 3 ký tự.
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="retype_password" class="form-label">Nhập lại mật khẩu</label>
+                            <input type="retype_password" class="form-control" id="retype_password"
+                                formControlName="retype_password">
+                            <div *ngIf="userForm.get('retype_password')?.invalid && userForm.get('retype_password')?.touched"
+                                class="text-danger">
+                                Nhập lại mật khẩu phải có ít nhất 3 ký tự.
+                            </div>
+                            <div *ngIf="userForm.get('retype_password')?.value !== userForm.get('password')?.value"
+                                class="text-danger">
+                                Nhập lại mật khẩu phải trùng với mật khẩu
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="fullname" class="form-label">Họ và tên</label>
+                            <input type="text" class="form-control" id="fullname" formControlName="fullname">
+                            <div *ngIf="userForm.get('fullname')?.invalid && userForm.get('fullname')?.touched"
+                                class="text-danger">
+                                Họ và tên là bắt buộc.
+                            </div>
+                        </div>
+                        <!-- <div class="mb-3">
+                            <label for="role_id" class="form-label">ID vai trò</label>
+                            <input type="number" class="form-control" id="role_id" formControlName="role_id">
+                            <div *ngIf="userForm.get('role_id')?.invalid && userForm.get('role_id')?.touched"
+                                class="text-danger">
+                                ID vai trò là bắt buộc.
+                            </div>
+                        </div> -->
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+        <div class="modal-footer">
+            <button type="button" id="closeModalButton" class="btn btn-secondary me-2" data-bs-dismiss="modal"
+                (click)="closeAddDiallog()">Trở
+                về</button>
+            <button type="button" class="btn btn-primary" (click)="createUser()">Thêm</button>
+        </div>
+    </div>
+</p-dialog>
+<table class="table mt-3">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Email</th>
+            <th>Full Name</th>
+            <th>Active</th>
+            <th>Role</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (user of users; track $index) {
+            <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.fullname }}</td>
+                <td>{{ user.is_active ? 'Yes' : 'No' }}</td>
+                @if (user.role_id === 1) {
+                <td>Admin</td>
+                } @else {
+                <td>User</td>
+                }
+                <td>
+                    <p-button (click)="deleteUser($event,user.id,$index)" icon="pi pi-times" label="Xóa" styleClass="p-button-danger"></p-button>
+                </td>
+            </tr>
+        }
+        
+    </tbody>
+</table>

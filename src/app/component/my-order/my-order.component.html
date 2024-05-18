@@ -1,0 +1,38 @@
+<app-header></app-header>
+<div class="container mt-5" style="min-height: 500px;">
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Mã đơn hàng</th>
+                <th>Họ và tên</th>
+                <th>Số điện thoại</th>
+                <th>Địa chỉ</th>
+                <th>Ghi chú</th>
+                <th>Ngày đặt hàng</th>
+                <th>Trạng thái</th>
+                <th>Tổng tiền</th>
+                <th>Phương thức thanh toán</th>
+                <th>Chi tiết đơn hàng</th>
+            </tr>
+          </thead>
+       <tbody>
+        @for (item of orders; track $index) {
+            <tr>
+                <td>{{item.id}}</td>
+                <td>{{item.fullname}}</td>
+                <td>{{item.phone_number}}</td>
+                <td>{{item.address}}</td>
+                <td>{{item.note}}</td>
+                <td>{{item.order_date | date:'dd-MM-yyyy HH:mm:ss'}}</td>
+                <td ><p class="badge text-bg-info ">{{item.status}}</p></td>
+                <td>{{item.total_money | currency:'VND':'symbol':'1.0-0'}}</td>
+                <td>{{item.payment_method}}</td>
+                <td><button class="btn btn-primary" routerLink="/order-details/{{item.id}}" >Xem chi tiết</button></td>
+            </tr>
+            }
+       </tbody>
+       
+    </table>
+</div>
+
+<app-footer></app-footer>

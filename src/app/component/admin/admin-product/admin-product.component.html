@@ -1,0 +1,358 @@
+<p-confirmDialog></p-confirmDialog>
+
+<button pButton pRipple (click)="showAddDialog()" label="Thêm" class="p-button-success m-2"></button>
+<p-dialog header="" [(visible)]="visibleAdd" [breakpoints]="{ '960px': '75vw' }" [style]="{ width: '50vw' }"
+    [draggable]="false" [resizable]="false">
+    <div class="modal-content p-2">
+        <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Thêm sản phẩm</h5>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+
+                <div class="p-3">
+                    <form [formGroup]="productForm">
+                        <div class="mb-3">
+                            <label for="productName" class="form-label">Tên Sản
+                                Phẩm</label>
+                            <input type="text" class="form-control" id="productName" formControlName="name"
+                                [class.is-invalid]="productForm.controls['name'].invalid &&productForm.controls['name'].touched">
+                            <div class="text-danger"
+                                *ngIf="productForm.controls['name'].invalid &&productForm.controls['name'].touched">
+                                Tên sản phẩm phải chứa ít nhất 3 ký tự.</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="productPrice" class="form-label">Giá</label>
+                            <input type="number" class="form-control" id="productPrice" formControlName="price"
+                                [class.is-invalid]="productForm.controls['price'].invalid &&productForm.controls['price'].touched">
+                            <div class="text-danger"
+                                *ngIf="productForm.controls['price'].invalid &&productForm.controls['price'].touched">
+                                Giá phải > 0</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="productDescription" class="form-label">Mô
+                                Tả</label>
+                            <textarea class="form-control" id="productDescription"
+                                formControlName="description"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="productCateId" class="form-label">Doanh
+                                Mục</label>
+                            <select class="form-control" formControlName="cate_id"
+                                [class.is-invalid]="productForm.controls['cate_id'].value == 0 &&productForm.controls['cate_id'].touched">
+                                <option value="0" selected disabled>Chọn Doanh muc</option>
+                                @for (category of categories; track $index) {
+                                <option value="{{category.id}}">{{category.name}}</option>
+                                }
+                            </select>
+                            <div class="text-danger"
+                                *ngIf="productForm.controls['cate_id'].value == 0 &&productForm.controls['cate_id'].touched">
+                                Vui lòng chọn doanh mục</div>
+                        </div>
+                        <div class="mb-3">
+                            <p-fileUpload mode="basic" chooseLabel="Thêm ảnh" name="demo2[]" [multiple]="true"
+                                url="https://www.primefaces.org/cdn/api/upload.php" accept="image/*"
+                                maxFileSize="10485760" (onSelect)="onFileChange($event)"></p-fileUpload>
+                            <label for="productImages" class="form-label">Hình Ảnh Sản
+                                Phẩm</label>
+                            <!-- <input type="file" multiple class="form-control" id="productPrice"
+                                (change)="onFileChange($event)"> -->
+                        </div>
+                        <div class=" mb-3">
+                            <label for="productSizes" class="form-label">Kích Cỡ:
+                            </label> <br>
+                            <div class="box-size">
+                                @for (size of sizes; track $index) {
+                                <span class="product-size" [class.active]="isSelectedSize($index,size.id)"
+                                    (click)="onSizeClick($index,size.id)">{{size.size}}</span>
+                                }
+                            </div>
+
+                        </div>
+                        <div class=" mb-3">
+                            <label for="productColors" class="form-label">Màu
+                                Sắc</label> <br>
+                            <div class="box-size">
+                                @for (color of colors; track $index) {
+                                @if ($index == 6) {
+                                <br>
+                                <br>
+                                <span class="product-size" [class.active]="isSelectedColor($index,color.id)"
+                                    (click)="onColorClick($index,color.id)">{{color.color}}</span>
+                                } @else {
+                                <span class="product-size" [class.active]="isSelectedColor($index,color.id)"
+                                    (click)="onColorClick($index,color.id)">{{color.color}}</span>
+                                }
+                                }
+                            </div>
+
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+        <div class="modal-footer">
+            <button type="button" id="closeModalButton" class="btn btn-secondary me-2" data-bs-dismiss="modal"
+                (click)="closeAddDiallog()">Trờ
+                về</button>
+            <button type="button" class="btn btn-primary" (click)="createProduct()">Thêm</button>
+        </div>
+    </div>
+</p-dialog>
+<div class="row">
+    <div class="col-6">
+        <div class="input-group ms-3" style="width: 500px;">
+            <input type="text" class="form-control" placeholder="Tìm kiếm sản phẩm" [(ngModel)]="keyword"
+                appEnterSearchProduct>
+            <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"
+                    (click)="onClickSearchProductsByKeyWord(keyword)"></i></span>
+        </div>
+    </div>
+    <div class="col-6">
+        <select class="form-control ms-3" (change)="onClickSearchProductsByCategory()" [(ngModel)]="cate_id" style="width: 500px;">
+            <option selected value="0">Tất cả</option>
+            @for (category of categories; track $index) {
+            <option value="{{category.id}}">{{category.name}}</option>
+            }
+        </select>
+    </div>
+</div>
+
+
+
+
+<table class="table mt-3">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Tên SP</th>
+            <th>Hình ảnh</th>
+            <th>Giá</th>
+            <th>Mô tả</th>
+            <th>Mã doanh mục</th>
+            <th>Kích cở</th>
+            <th>Màu sắc</th>
+            <th>Hành động</th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (product of products; track $index) {
+        <tr>
+            <td>{{ product.id }}</td>
+            <td>{{ product.name }}</td>
+            <td><img src="{{ product.thumbnail }}" alt="Thumbnail" style="max-width: 80px;"></td>
+            <td>{{ product.price | currency:'VND':'symbol':'1.0-0' }}</td>
+            <td>{{ product.description }}</td>
+            <td>{{ product.category.name }}</td>
+            <td>
+                @for(size of product.size; track $index) {
+                {{ size.size}}
+                @if ($index == product.size.length -1) {
+
+                } @else {
+                ,
+                }
+                }
+            </td>
+            <td>
+                @for(color of product.color; track $index) {
+                {{ color.color }}
+                @if ($index == product.color.length-1) {
+
+                } @else {
+                ,
+                }
+                }
+            </td>
+            <td>
+                <a>
+                    <button pButton pRipple (click)="showUpdateDialog(product.id)" label="Chỉnh sửa"
+                        class="p-button-warning me-2"></button>
+                </a>
+                <p-button (click)="deleteProduct($event,product.id,$index)" icon="pi pi-times" label="Xóa"
+                    styleClass="p-button-danger"></p-button>
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>
+<p-dialog header="" [(visible)]="visibleUpdate" [breakpoints]="{ '960px': '75vw' }" [style]="{ width: '50vw' }"
+    [draggable]="false" [resizable]="false">
+    <div class="modal-content p-2">
+        <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Sửa sản phẩm</h5>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="p-3">
+                    <form [formGroup]="productForm">
+                        <div class="mb-3">
+                            <label for="productName" class="form-label">Tên Sản
+                                Phẩm</label>
+                            <input type="text" class="form-control" id="productName" formControlName="name"
+                                [class.is-invalid]="productForm.controls['name'].invalid &&productForm.controls['name'].touched"
+                                value="{{product?.name}}">
+                            <div class="text-danger"
+                                *ngIf="productForm.controls['name'].invalid &&productForm.controls['name'].touched">
+                                Tên sản phẩm phải chứa ít nhất 3 ký tự.</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="productPrice" class="form-label">Giá</label>
+                            <input type="number" class="form-control" id="productPrice" formControlName="price"
+                                value="{{product?.price}}"
+                                [class.is-invalid]="productForm.controls['price'].invalid &&productForm.controls['price'].touched">
+                            <div class="text-danger"
+                                *ngIf="productForm.controls['price'].invalid &&productForm.controls['price'].touched">
+                                Giá phải > 0</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="productDescription" class="form-label">Mô
+                                Tả</label>
+                            <textarea class="form-control" id="productDescription" [value]="product?.description"
+                                formControlName="description"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="productCateId" class="form-label">Doanh
+                                Mục</label>
+                            <select class="form-control" formControlName="cate_id"
+                                [class.is-invalid]="productForm.controls['cate_id'].value == 0 &&productForm.controls['cate_id'].touched">
+                                @for (category of categories; track $index) {
+                                <option [selected]="product?.category?.id === category.id" value="{{category.id}}">
+                                    {{category.name}}</option>
+                                }
+                            </select>
+                            <div class="text-danger"
+                                *ngIf="productForm.controls['cate_id'].value == 0 &&productForm.controls['cate_id'].touched">
+                                Vui lòng chọn doanh mục</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="productImages" class="form-label">Hình Ảnh Sản
+                                Phẩm</label> <br>
+                            <!-- <p-button  icon="pi pi-image" label="Show"></p-button> -->
+                            @for (image of product?.product_images; track $index) {
+                            <p-overlayPanel #op>
+                                <ng-template pTemplate="content">
+                                    <input type="file" id="fileInput" style="display:none;"
+                                        [(ngModel)]="selectedImageFile"
+                                        (change)="updateProductImage($event,image.id,$index)"
+                                        [ngModelOptions]="{standalone: true}" />
+                                    <a>
+                                        <button pButton pRipple (click)="editFile()" label="Chỉnh sửa"
+                                            class="p-button-warning me-2"></button>
+                                    </a>
+                                    <p-button icon="pi pi-times" label="Xóa"
+                                        (click)="deleteProductImage($event,image.id,$index)"
+                                        styleClass="p-button-danger"></p-button>
+                                </ng-template>
+                            </p-overlayPanel>
+                            <img class="m-2" (click)="op.toggle($event)" [src]="image.image_url" alt=""
+                                style="width: 100px;">
+                            }
+                            @if(product?.product_images!.length < 5) { <p-fileUpload mode="basic" chooseLabel="Thêm ảnh"
+                                name="demo[]" url="https://www.primefaces.org/cdn/api/upload.php" accept="image/*"
+                                maxFileSize="10485760" (onSelect)="createProductImage($event,product?.id!)">
+                                </p-fileUpload>
+                                }
+                        </div>
+                        <div class=" mb-3">
+                            <label for="productSizes" class="form-label">Kích Cỡ:
+                            </label> <br>
+                            <div class="box-size">
+                                @for (size of product?.size; track $index) {
+                                <p-overlayPanel #sizeProduct>
+                                    <ng-template pTemplate="content">
+                                        <p-button icon="pi pi-times" label="Xóa"
+                                            (onClick)="deleteSizeProduct(product?.id!,size.id,$index)"
+                                            styleClass="p-button-danger"></p-button>
+                                    </ng-template>
+                                </p-overlayPanel>
+                                <span class="product-size-update" (click)="sizeProduct.toggle($event)"
+                                    active>{{size.size}}</span>
+
+                                }
+                            </div>
+                            <p-overlayPanel #addSizeProduct [style]="{width: '600px'}">
+                                <ng-template pTemplate="content">
+                                    <div class="box-size">
+                                        @for (size of sizes; track $index) {
+                                        <span class="product-size" [class.active]="isSelectedSize($index,size.id)"
+                                            (click)="onSizeClick($index,size.id)">{{size.size}}</span>
+                                        }
+                                        <button class="btn  text-white"
+                                            style="background-color: #3B82F6;width: 100px; margin-top: 14px; margin-left: 10px;"
+                                            (click)="createSizeProduct()"> <i class="fa-solid fa-plus"></i>
+                                            Thêm</button>
+                                    </div>
+                                </ng-template>
+                            </p-overlayPanel>
+
+                            <button class="btn  mt-3 ms-2 text-white" style="background-color: #3B82F6;"
+                                (click)="addSizeProduct.toggle($event)"> <i class="fa-solid fa-plus"></i> Thêm</button>
+
+                        </div>
+                        <div class=" mb-3">
+                            <label for="productColors" class="form-label">Màu
+                                Sắc</label> <br>
+                            <div class="box-size">
+                                @for (color of product?.color; track $index) {
+                                <p-overlayPanel #colorProduct>
+                                    <ng-template pTemplate="content">
+                                        <p-button icon="pi pi-times" label="Xóa" styleClass="p-button-danger"
+                                            (onClick)="deleteColorProduct(product?.id!,color.id,$index)"> </p-button>
+                                    </ng-template>
+                                </p-overlayPanel>
+                                @if ($index == 4) {
+                                <br>
+                                <br>
+                                <span class="product-size-update" [class.active]="isSelectedColor($index,color.id)"
+                                    (click)="colorProduct.toggle($event)">{{color.color}}</span>
+                                } @else {
+                                <span class="product-size-update" [class.active]="isSelectedColor($index,color.id)"
+                                    (click)="colorProduct.toggle($event)">{{color.color}}</span>
+                                }
+                                }
+                            </div>
+                            <p-overlayPanel #addColorProduct [style]="{width: '600px'}">
+                                <ng-template pTemplate="content">
+                                    <div class="box-size">
+                                        @for (color of colors; track $index) {
+                                        <span class="product-size" [class.active]="isSelectedColor($index,color.id)"
+                                            (click)="onColorClick($index,color.id)">{{color.color}}</span>
+                                        }
+                                        <button class="btn  text-white"
+                                            style="background-color: #3B82F6;width: 100px; margin-top: 14px; margin-left: 10px;"
+                                            (click)="createColorProduct()"> <i class="fa-solid fa-plus"></i>
+                                            Thêm</button>
+                                    </div>
+                                </ng-template>
+                            </p-overlayPanel>
+
+                            <button class="btn  mt-3 ms-2 text-white" style="background-color: #3B82F6;"
+                                (click)="addColorProduct.toggle($event)"> <i class="fa-solid fa-plus"></i> Thêm</button>
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+        <div class="modal-footer">
+            <button type="button" id="closeModalButton" class="btn btn-secondary me-2" data-bs-dismiss="modal"
+                (click)="closeAddDiallog()">Trở về</button>
+            <button type="button" class="btn btn-primary" (click)="updateProduct()">Sửa</button>
+        </div>
+    </div>
+</p-dialog>
+<nav aria-label="Page navigation example " class=" d-flex justify-content-center">
+    <ul class="pagination ">
+        <li class="page-item" (click)="onFirstPage()"><a class="page-link">First</a></li>
+        <li class="page-item" (click)="onPreviousPage()"><a class="page-link">Previous</a></li>
+        <li class="page-item" *ngFor="let page of visiblePage" [class.active]="currentPage === page">
+            <a class="page-link" (click)="onPageChange(page)">{{ page + 1 }}</a>
+        </li>
+        <li class="page-item" (click)="onNextPage()"><a class="page-link">Next</a></li>
+        <li class="page-item" (click)="onLastPage()"><a class="page-link">Last</a></li>
+    </ul>
+</nav>

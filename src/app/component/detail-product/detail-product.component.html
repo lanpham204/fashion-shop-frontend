@@ -1,0 +1,161 @@
+<app-header></app-header>
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <div id="carouselExample" class="carousel slide" data-bs-ride="carousel" style="min-height: 640px;">
+                <div class="carousel-inner">
+                    @for (productImage of product?.product_images; track $index) {
+                    <div class="carousel-item " *ngIf="$index === currentImage" [class.active]="$index == currentImage">
+                        <div class="square-image">
+                            <img src="{{productImage.image_url}}" class="product-image" alt="Product Image">
+                        </div>
+                    </div>
+                    }
+
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample"
+                    data-bs-slide="prev" (click)="onThumbernailClick(currentImage - 1)">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselExample"
+                    data-bs-slide="next" (click)="onThumbernailClick(currentImage + 1)">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+            <div class="row">
+                <div class="thumbnail-container">
+                    @for (productImage of product?.product_images; track $index) {
+                    <div class="thumbnail-item active" (click)="onThumbernailClick($index)">
+                        <img src="{{productImage.image_url}}" class="thumbnail-image" alt="Thumbnail Image">
+                    </div>
+                    }
+
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="product-details text-dark">
+                <h2>Thông tin chi tiết sản phẩm</h2>
+                <h4 class="mt-4">Tên sản phẩm: {{product?.name}}</h4>
+                <p class="text-muted text-right mt-4">
+                    <span class="discounted-price">{{product?.price | currency:'VND':'symbol':'1.0-0'}}</span>
+                </p>
+                <div class="box-size mt-4">
+                    <span>Size</span>
+                    @for (size of product?.size; track $index) {
+                    <div class="product-size" [class.active]="$index == currentSize"
+                        (click)="onSizeClick($index,size.id)">{{size.size}}</div>
+                    }
+
+                </div>
+                <div class="box-size mt-4">
+                    <span>Màu</span>
+                    @for (color of product?.color; track $index) {
+                    <div class="product-size" [class.active]="$index == currentColor"
+                        (click)="onColorClick($index,color.id)">{{color.color}}</div>
+                    }
+                </div>
+                <div class="product-quantity text-dark">
+                    <div class="border-wrapper">
+                        <button (click)="decreaseQuantity()">-</button>
+                        <input type="number" value="{{quantity}}" disabled>
+                        <button (click)="incraseQuantity()">+</button>
+                    </div>
+                </div>
+                <div class="product-actions">
+                    <button class="btn btn-primary" (click)="addToCart()">Thêm vào giỏ hàng</button>
+                    <button class="btn btn-success">Mua ngay</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link active" data-bs-toggle="tab" href="#tab-description">Mô tả</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="tab" href="#tab-review">Đánh giá</a>
+            </li>
+        </ul>
+
+        <div class="tab-content  mb-5">
+            <div class="tab-pane fade show active" id="tab-description">
+                <div class="card">
+                    <div class="card-body">
+                        <h4>Mô tả chi tiết</h4>
+                        <p>{{product?.description}}
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="tab-review">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row total_rate">
+                            <div class="col-6 d-flex justify-content-center align-items-center"
+                                style="    background-color: #f6f6f6;">
+                                <div class="box_total">
+                                    <h4>{{averageRating}}/5</h4>
+                                    <h6>({{ratings.length}} lượt đánh giá)</h6>
+                                </div>
+                            </div>
+                            <div class="col-6 ">
+                                <div class="rating-list">
+                                    <h3>{{ratings.length}} lượt đánh giá</h3>
+                                    <ul class="list">
+                                        <li><a href="#">5<i class="fa fa-star"></i><i class="fa fa-star"></i><i
+                                                    class="fa fa-star"></i><i class="fa fa-star"></i><i
+                                                    class="fa fa-star"></i>Có {{count5Start}} lượt đánh </a></li>
+                                        <li><a href="#">4<i class="fa fa-star"></i><i class="fa fa-star"></i><i
+                                                    class="fa fa-star"></i><i class="fa fa-star"></i> Có {{count4Start}} lượt đánh
+                                                giá</a></li>
+                                        <li><a href="#">3<i class="fa fa-star"></i><i class="fa fa-star"></i><i
+                                                    class="fa fa-star"></i> Có {{count3Start}} lượt đánh giá</a></li>
+                                        <li><a href="#">2<i class="fa fa-star"></i><i class="fa fa-star"></i> Có {{count2Start}} lượt
+                                                đánh giá</a></li>
+                                        <li><a href="#">1<i class="fa fa-star"></i> Có {{count1Start}} lượt đánh giá</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @if (userId != 0) {
+                        <div class="row ms-4">
+                            <h4>Đánh giá</h4>
+                            <div class="col-2 d-flex justify-content-center p-2 pt-2">
+                                <div class="">
+                                    <p-rating [(ngModel)]="valueRating" [cancel]="false" />
+                                </div>
+                            </div>
+                            <div class="col-10">
+                                <div class="input-group  p-2">
+                                    <input type="text" class="form-control" placeholder="Đánh giá" [(ngModel)]="comment">
+                                    <span class="input-group-text text-center btn btn-primary" (click)="ratingProduct()">Gửi</span>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    
+                    <div class="review-list ms-5 me-5">
+                        @for (rating of ratings; track $index) {
+                        <div class="review-item mt-1 mb-2">
+                            <h5>
+                                {{rating.user.fullname}}
+                            </h5>
+                            <div class="review-star">
+                                {{rating.value}}<i class="fas fa-star"></i>: <span
+                                    class="ms-2">{{rating.comment}}</span>
+                            </div>
+                        </div>
+                        <div class="divider-nospace mb-1"></div>
+                        }
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<app-footer></app-footer>

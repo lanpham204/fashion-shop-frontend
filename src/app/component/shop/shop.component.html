@@ -1,0 +1,106 @@
+<app-header></app-header>
+<div class="container " style="margin-top: 50px;">
+    <div class="row">
+        <div class="col-12 col-sm-12 col-md-3">
+            <ul class="list-unstyled ps-0">
+                <li class="mb-1">
+                    <button class="btn rounded collapsed text-start" data-bs-toggle="collapse"
+                        data-bs-target="#home-collapse" aria-expanded="true">
+                        <h4>Các danh mục</h4>
+                    </button>
+                    <div class="border-top mb-2"></div>
+                    <div class="collapse show" id="home-collapse">
+                        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+
+                            <li class="list-group-item text-secondary text-left mx-4 mb-3" style="font-size: 18px;">
+                                <input class="me-2" type="radio" name="cate" (click)="resfeshSearhCategory()">Tất cả
+                            </li>
+                            @for (category of categories; track $index) {
+                            <li class="list-group-item text-secondary text-left mx-4 mb-3" style="font-size: 18px;">
+                                <input class="me-2" type="radio" name="cate"
+                                    (click)="onClickSearchProductsByCategory(category.id)">{{category.name}}
+                            </li>
+                            }
+
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+
+        </div>
+        <div class="col-12 col-sm-12 col-md-9">
+            <div class="search-box d-flex flex-wrap justify-content-between" style="max-height: 80px; ">
+                <div class="col-md-6 col-sm-12 mb-2 mx-auto" style="max-width:300px;">
+                    <select class="form-control" [(ngModel)]="sortType" (change)="sortData()">
+                        <option value="" selected disabled>Sắp xếp <i class="fa-regular fa-square-caret-down"></i>
+                        </option>
+                        <option value="asc">Theo giá tiền tăng dần</option>
+                        <option value="desc">Theo giá tiền giảm dần</option>
+                    </select>
+                </div>
+                <div class="col-md-6 col-sm-12  mx-auto" style="max-width:300px;">
+                    <!-- <div class="input-group">
+                            <input type="text" class="form-control" placeholder="Tìm kiếm sản phẩm" [(ngModel)]="keyword" (change)="onClickSearchProductsByKeyWord(keyword)" >
+                            <span class="input-group-text" ><i class="fa-solid fa-magnifying-glass" (click)="onClickSearchProductsByKeyWord(keyword)"></i></span>
+                        </div> -->
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Tìm kiếm sản phẩm" [(ngModel)]="keyword"
+                            (input)="onClickSuggestProductsByKeyWord()" appEnterSearchProduct>
+                        <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"
+                                (click)="onClickSearchProductsByKeyWord(keyword)"></i></span>
+                    </div>
+
+                    <!-- Hiển thị gợi ý sản phẩm  -->
+                    <ul class="list-group" *ngIf="suggestedProducts.length > 0 && keyword.length > 2"
+                        style="position: absolute;z-index: 1;">
+                        <li class="list-group-item" *ngFor="let product of suggestedProducts">
+                            <img src="{{product.thumbnail}}" class="me-2" style="width: 47px;" alt="...">
+                            <a class="text-decoration-none text-dark" routerLink="/products/{{product.id}}">{{
+                                product.name }}</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row  mt-4">
+                @for (product of products; track $index) {
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card h-100">
+                        <a routerLink="/products/{{product.id}}">
+                            <img src="{{product.thumbnail}}" class="card-img-top" alt="...">
+                        </a>
+                        <div class="card-body">
+
+                            <a class="h2 text-decoration-none text-dark"
+                                routerLink="/products/{{product.id}}">{{product.name}}</a>
+                            <p class="text-muted text-right mb-0">Đánh giá: <span class="fw-bold">{{averageRating[$index].id === product.id ? averageRating[$index].value:5 }} </span> <i class="text-warning fa fa-star"></i></p>
+                            <p class="text-muted text-right ">
+                                <span class="discounted-price">{{product.price |
+                                    currency:'VND':'symbol':'1.0-0'}}</span>
+                            </p>
+                            <!-- <p class="text-muted">Reviews (24)</p> -->
+                        </div>
+                    </div>
+                </div>
+                }
+
+
+
+            </div>
+            <div class="col-md-12 mb-5 text-center">
+                <div class="page">
+                    <ul>
+                        <li (click)="onFirstPage()"><a><i class="fa-solid fa-angle-left"></i></a></li>
+                        <li (click)="onPreviousPage()"><a><i class="fa-solid fa-angles-left"></i></a></li>
+                        <li *ngFor="let page of visiblePage" [class.active]="currentPage === page">
+                            <a (click)="onPageChange(page)">{{ page + 1 }}</a>
+                        </li>
+                        <li (click)="onNextPage()"><a><i class="fa-solid fa-angles-right"></i></a></li>
+                        <li (click)="onLastPage()"><a><i class="fa-solid fa-angle-right"></i></a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<app-footer></app-footer>

@@ -1,0 +1,91 @@
+<p-confirmDialog></p-confirmDialog>
+<button pButton pRipple (click)="showDialog()" label="Thêm" class="p-button-success m-2"></button>
+<p-dialog header="" [(visible)]="visibleAdd" [breakpoints]="{ '960px': '75vw' }" [style]="{ width: '50vw' }"
+  [draggable]="false" [resizable]="false">
+  <div class="modal-content p-2">
+    <div class="modal-header">
+      <h5 class="modal-title" id="exampleModalLabel">Thêm danh mục</h5>
+    </div>
+    <div class="modal-body">
+      <div class="row">
+        <div class="p-3">
+          <form [formGroup]="categoryForm">
+            <div class="mb-3">
+              <label for="cate_name" class="form-label">Tên doanh mục</label>
+              <input type="text" class="form-control" id="cate_name" formControlName="name"
+                [class.is-invalid]="categoryForm.controls['name'].invalid &&categoryForm.controls['name'].touched">
+              <div class="text-danger"
+                *ngIf="categoryForm.controls['name'].invalid &&categoryForm.controls['name'].touched">
+                doanh mục phải chứa ít nhất 3 ký tự.</div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+    </div>
+    <div class="modal-footer">
+      <button type="button" id="closeModalButton" class="btn btn-secondary me-2" data-bs-dismiss="modal"
+        (click)="closeDiallog()">Trờ
+        về</button>
+      <button type="button" class="btn btn-primary" (click)="createCategory()">Thêm</button>
+    </div>
+  </div>
+</p-dialog>
+<div class="container d-flex justify-content-center">
+  <table class="table table-hover ">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Tên</th>
+        <th>Hành động</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (category of categories; track $index) {
+      <tr>
+        <td>{{ category.id }}</td>
+        <td>{{ category.name }}</td>
+        <td>
+          <a>
+            <button pButton pRipple (click)="showUpdateDialog(category.id)" label="Chỉnh sửa"
+              class="p-button-warning me-2"></button>
+          </a>
+          <p-button (click)="deleteCategory($event,category.id,$index)" icon="pi pi-times" label="Xóa"
+            styleClass="p-button-danger"></p-button>
+        </td>
+      </tr>
+      }
+    </tbody>
+  </table>
+  <p-dialog header="" [(visible)]="visibleUpdate" [breakpoints]="{ '960px': '75vw' }" [style]="{ width: '50vw' }"
+  [draggable]="false" [resizable]="false">
+  <div class="modal-content p-2">
+    <div class="modal-header">
+      <h5 class="modal-title" id="exampleModalLabel">Sửa danh mục</h5>
+    </div>
+    <div class="modal-body">
+      <div class="row">
+        <div class="p-3">
+          <form [formGroup]="categoryForm">
+            <div class="mb-3">
+              <label for="cate_name" class="form-label">Tên doanh mục</label>
+              <input type="text" class="form-control" id="cate_name" formControlName="name"
+                [class.is-invalid]="categoryForm.controls['name'].invalid &&categoryForm.controls['name'].touched" >
+              <div class="text-danger"
+                *ngIf="categoryForm.controls['name'].invalid &&categoryForm.controls['name'].touched">
+                doanh mục phải chứa ít nhất 3 ký tự.</div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+    </div>
+    <div class="modal-footer">
+      <button type="button" id="closeModalButton" class="btn btn-secondary me-2" data-bs-dismiss="modal"
+        (click)="closeDiallog()">Trờ
+        về</button>
+      <button type="button" class="btn btn-primary" (click)="updateCategory()">Sửa</button>
+    </div>
+  </div>
+</p-dialog>
+</div>

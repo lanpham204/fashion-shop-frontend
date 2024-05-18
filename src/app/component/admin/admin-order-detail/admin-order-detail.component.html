@@ -1,0 +1,91 @@
+<p-confirmDialog></p-confirmDialog>
+<div class="container">
+    <div class="row">
+        <div class="col-md-4">
+            <form>
+                <div class="mb-3">
+                    <label for="orderId" class="form-label">Mã đơn hàng</label>
+                    <input type="text" class="form-control" id="orderId" value="{{order?.id}}" readonly>
+                </div>
+                <div class="mb-3">
+                    <label for="fullName" class="form-label">Họ và tên</label>
+                    <input type="text" class="form-control" id="fullName" value="{{order?.fullname}}" readonly>
+                </div>
+                <div class="mb-3">
+                    <label for="phoneNumber" class="form-label">Số điện thoại</label>
+                    <input type="text" class="form-control" id="phoneNumber" value="{{order?.phone_number}}" readonly>
+                </div>
+                <div class="mb-3">
+                    <label for="address" class="form-label">Địa chỉ</label>
+                    <input type="text" class="form-control" id="address" value="{{order?.address}}" readonly>
+                </div>
+                <div class="mb-3">
+                    <label for="note" class="form-label">Ghi chú</label>
+                    <input type="text" class="form-control" id="note" value="{{order?.note}}" readonly>
+                </div>
+                <div class="mb-3">
+                    <label for="orderDate" class="form-label">Ngày đặt hàng</label>
+                    <input type="text" class="form-control" id="orderDate"
+                        value="{{order?.order_date | date: 'dd-MM-yyyy HH:mm:ss'}}" readonly>
+                </div>
+                <div class="mb-3">
+                    <label for="status" class="form-label">Trạng thái</label>
+                    <input type="text" class="form-control" id="status" value="{{order?.status}}" readonly>
+                </div>
+                <div class="mb-3">
+                    <label for="paymentMethod" class="form-label">Phương thức thanh toán</label>
+                    <input type="text" class="form-control" id="paymentMethod" value="{{order?.payment_method}}"
+                        readonly>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-8 mt-5">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Tên sản phẩm</th>
+                        <th>Hình ảnh</th>
+                        <th>Giá</th>
+                        <th>Size</th>
+                        <th>Color</th>
+                        <th>Số lượng</th>
+                        <th>Tổng tiền</th>
+                        <th>Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (item of order?.order_details; track $index) {
+                    <tr>
+                        <td>{{item.product.name}}</td>
+                        <td><img src="{{item.product.thumbnail}}" alt="Sản phẩm" style="max-width: 100px;"> </td>
+                        <td>{{item.product.price | currency:'VND':'symbol':'1.0-0'}}</td>
+                        <td>{{item.size}}</td>
+                        <td>{{item.color}}</td>
+                        <td class="d-flex"><button class="btn btn-link px-2" (click)="descraseQuantity(item)">
+                                <i class="fas fa-minus"></i>
+                            </button>
+
+                            <input min="1" name="quantity" value="{{item.quantity}}" type="number"
+                                class="form-control form-control-sm" style="width: 50px;" disabled />
+
+                            <button class="btn btn-link px-2" (click)="incraseQuantity(item)">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </td>
+                        <td>{{item.product.price * item.quantity | currency:'VND':'symbol':'1.0-0'}}</td>
+                        <td>
+                            <p-button icon="pi pi-times" label="Xóa" styleClass="p-button-danger m-1" (onClick)="deleteOrder($event,item.id,$index)"></p-button>
+                        </td>
+                    </tr>
+                    }
+
+
+                </tbody>
+            </table>
+            <h3 class="" style="color: red;">Tổng cộng: {{totalAmount|
+                currency:'VND':'symbol':'1.0-0'}} </h3>
+            <button class="btn btn-secondary d-flex justify-content-end" style="font-size: 25px;"
+                routerLink="/admin/orders">Trở về</button>
+        </div>
+    </div>
+</div>

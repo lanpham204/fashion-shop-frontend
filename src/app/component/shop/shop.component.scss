@@ -1,0 +1,57 @@
+.search-box select {
+    // max-width: 700px;
+    // margin-right: 100px;
+}
+
+.search-box {
+    background-color: #f6f6f6;
+    border-radius: 10px;
+    padding: 20px;
+}
+
+.page ul {
+    padding: 0;
+    margin: 0;
+}
+
+.page ul li {
+    display: inline-block;
+    margin-bottom: 4px;
+    font-weight: 400;
+}
+
+.page ul li a,
+.page ul li span {
+    color: gray;
+    text-align: center;
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    border-radius: 50%;
+    border: 1px solid #e6e6e6;
+}
+
+.page ul li.active a,
+.page ul li.active span {
+    background: #4ba1fa;
+    color: #fff;
+    border: 1px solid transparent;
+}
+.discounted-price {
+    font-size: 20px;
+    color: #000000; /* Set your desired color for the discounted price */
+    font-weight: bold; /* Make the discounted price bold */
+}
+
+del {
+    color: #868e96; /* Set your desired color for the strikethrough text */
+    margin-right: 5px; /* Add some spacing between the original and discounted prices */
+}
+:host ::ng-deep .list-group {
+    /* CSS cho list-group */
+  }
+  
+  :host ::ng-deep .list-group-item {
+    /* CSS cho các mục trong list-group */
+  }

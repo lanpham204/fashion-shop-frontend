@@ -1,0 +1,29 @@
+div {
+    padding: 0;
+}
+.box-size {
+    // display: flex;
+    // align-items: center;
+    width: 35px;
+}
+.box-size .product-size.active {
+    color: #71cd14;
+    border-color: #71cd14;
+}
+.box-size .product-size {
+    padding: 6px 35px;
+    border: 1px solid rgba(0,0,0,.09019607843137255);
+    color: #333;
+    font-size: 16px;
+    margin-left: 8px;
+    cursor: pointer;
+}
+.box-size  .product-size-update {
+    color: #71cd14;
+    border-color: #71cd14;
+    padding: 6px 35px;
+    border: 1px solid rgba(0,0,0,.09019607843137255);
+    font-size: 16px;
+    margin-left: 8px;
+    cursor: pointer;
+}

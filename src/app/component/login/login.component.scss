@@ -1,0 +1,135 @@
+.login-form {
+    border-radius: 10px;
+    padding: 20px;
+    max-width: 500px;
+    border: 1px solid #f7edd5;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 50px;
+}
+
+.login-header {
+    text-align: center;
+    /*      color: rgb(233, 66, 178);*/
+    color: black;
+    margin-bottom: 20px;
+
+}
+
+
+.form-control {
+    background-color: transparent;
+    border: none;
+    color: black;
+}
+
+.form-control:focus {
+    color: black;
+    background-color: transparent;
+    outline: none;
+    box-shadow: none;
+    border-color: transparent;
+    padding-left: 0;
+}
+
+.password-field {
+    position: relative;
+}
+
+.password-toggle {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    color: black;
+    cursor: pointer;
+}
+
+.checkbox-text {
+    color: black;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+}
+
+/* Màu checkbox khi được chọn */
+.checkbox-text input[type="checkbox"]:checked {
+    border-color: black;
+    background-color: #8279B9;
+}
+
+.form-check-input {
+    margin-right: 5px;
+}
+.form-group label {
+    color: black;
+}
+.login-link {
+    color: brown;
+    text-decoration: none;
+}
+
+.login-button {
+    background: #919191;
+    color: white;
+    border-radius: 30px;
+    width: 100%;
+    padding: 10px 0;
+    margin-top: 20px;
+    border: none;
+}
+
+
+.divider-nospace {
+    border-top: 1px solid black;
+}
+
+.form-control::placeholder {
+    color: black;
+    opacity: 1;
+}
+
+.btn.btn-fb {
+    background: #4f69a2;
+    border-color: #4f69a2;
+    color: #fff;
+}
+
+.btn-google {
+    color: #545454;
+    background-color: #ffffff;
+    box-shadow: 0 1px 2px 1px #ddd;
+    border-radius: 30px;
+    width: 100%;
+    margin-top: 10px;
+    border: none;
+}
+
+.or-container {
+    align-items: center;
+    color: #ccc;
+    display: flex;
+    margin: 10px 0;
+}
+
+.line-separator {
+    background-color: #928BBB;
+    flex-grow: 5;
+    height: 1px;
+}
+
+.or-label {
+    flex-grow: 1;
+    margin: 0 10px;
+    text-align: center;
+}
+.btn-facebook {
+    color: #fff;
+    background-color: #3b5998;
+    border-color: rgba(0,0,0,0.2);
+    border-radius: 30px;
+    width: 100%;
+    margin-top: 20px;
+    border: none;
+}
